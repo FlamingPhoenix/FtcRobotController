@@ -37,7 +37,7 @@ public class VelocityControl extends LinearOpMode {
             if (derivative < angularVelocity)
                 power = power + adjustment;
             if (derivative > angularVelocity)
-                power = power + adjustment;
+                power = power - adjustment;
 
             motor.setPower(out);
 
