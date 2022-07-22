@@ -17,8 +17,8 @@ public class BetterVelocityControl extends LinearOpMode {
         aka position, velocity and acceleration
         */
 
-        float Kp = 0;
-        float kd = 0;
+        float Kp = 0;//creates oscilator
+        float kd = 0;//damper
         float ki = 0;//i should be very small so we get rid of the steady state error and can actually reach the velocity while not getting a ridiculous out variable value and occilation at the end of the op mode
 
         float reference = 1000;//desired speed in counts/sec - this is ab 1 rev/sec
@@ -54,7 +54,7 @@ public class BetterVelocityControl extends LinearOpMode {
             error = (float) (reference - ((currentPosition-lastPosition)/timer.seconds()));
             derivative = (float)((error - lastError)/timer.seconds());
             integral = motor.getCurrentPosition();
-            out = ((Kp*error) - (kd*derivative) + (ki*integral));
+            out = ((Kp*error) + (kd*derivative) + (ki*integral));
 
             motor.setPower(out);
 
