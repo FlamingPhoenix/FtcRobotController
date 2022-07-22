@@ -9,15 +9,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class VelocityControl extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        waitForStart();
         DcMotor motor;
         motor = hardwareMap.dcMotor.get("motor");
-        float PPR = 1120f;
-        float angularVelocity = 10;//counts/second
-        float out = 0;
+        telemetry.addData("Ready for start", 0);
+        telemetry.update();
+        waitForStart();
+        motor.setPower(1);
+//        float PPR = 1120f;
+        float angularVelocity = 4500;//counts/second - max is 4750
 
         ElapsedTime timer = new ElapsedTime();
-        ElapsedTime globalTimer = new ElapsedTime();
 
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -25,13 +26,14 @@ public class VelocityControl extends LinearOpMode {
         float currentPosition = 0;
         float lastPosition = 0;
 
-        float adjustment = 0.1f;
+        float adjustment = 0.01f;
         float power = 0;
+        timer.reset();
 
-        while (globalTimer.seconds() < 10 && opModeIsActive()) {
+        while (timer.seconds()<5) {
             currentPosition = Math.abs(motor.getCurrentPosition());
 
-            double derivative = (currentPosition - lastPosition)/timer.seconds();
+            float derivative = (float) ((currentPosition - lastPosition)/timer.seconds());
 
             lastPosition = currentPosition;
 
@@ -40,11 +42,23 @@ public class VelocityControl extends LinearOpMode {
             if (derivative > angularVelocity)
                 power = power - adjustment;
 
-            motor.setPower(out);
+            if (power > 1)
+                power = 0.95f;//safety net
+
+            motor.setPower(power);
+
+            if (gamepad1.a) {
+                angularVelocity = angularVelocity + 1;
+            } else if (gamepad1.b) {
+                angularVelocity -= 1;
+            }
 
             timer.reset();
-
             telemetry.addData("speed: ", derivative);
+            telemetry.addData("power", power);
+            telemetry.addData("max angular velocity: ", angularVelocity);
+            telemetry.update();
         }
+        motor.setPower(0);
     }
 }
