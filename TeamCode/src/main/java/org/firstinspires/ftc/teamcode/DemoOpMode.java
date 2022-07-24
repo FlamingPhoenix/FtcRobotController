@@ -1,13 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
+@TeleOp
 public class DemoOpMode extends OpMode {
     DcMotor frontRight, frontLeft, backRight, backLeft;
 
     public void drive (float x1, float y1, float x2) {
+        if (Math.abs(x1) > 0) {
+            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else {
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
         float fl = Range.clip(y1 + x1 + x2, -1, 1);
         float fr = Range.clip(y1 - x1 - x2, -1, 1);
         float bl = Range.clip(y1 - x1 + x2, -1, 1);
@@ -29,6 +39,6 @@ public class DemoOpMode extends OpMode {
 
     @Override
     public void loop() {
-        drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive(gamepad1.right_stick_x, gamepad1.left_stick_x, -gamepad1.right_stick_y);
     }
 }
