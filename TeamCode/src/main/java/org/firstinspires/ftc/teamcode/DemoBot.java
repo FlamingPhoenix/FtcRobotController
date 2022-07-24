@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous
 public class DemoBot extends LinearOpMode { //drives forward 10 inches, strafes 10 inches left, drives back 10 inches, strafes 10 inches right - even if distances are wrong, it should about make a good square
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {//test
         DcMotor frontRight, frontLeft, backRight, backLeft;
         frontRight = hardwareMap.dcMotor.get("front right");
         frontLeft = hardwareMap.dcMotor.get("front left");
