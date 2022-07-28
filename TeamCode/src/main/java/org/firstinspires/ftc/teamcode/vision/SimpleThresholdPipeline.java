@@ -31,8 +31,8 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
      * min and max values here for now, meaning
      * that all pixels will be shown.
      */
-    public Scalar lower = new Scalar(0, 0, 0);
-    public Scalar upper = new Scalar(255, 255, 255);
+    public Scalar lower = new Scalar(63.8, 161.5, 69.4);
+    public Scalar upper = new Scalar(204, 189.8, 99.2);
 
     /*
      * A good practice when typing EOCV pipelines is
@@ -47,6 +47,13 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
     private Mat ycrcbMat       = new Mat();
     private Mat binaryMat      = new Mat();
     private Mat maskedInputMat = new Mat();
+
+    Point find1 = new Point(0, 0);
+    Point find2 = new Point(1, 0);
+
+    Point A = new Point(140, 115);
+    Point B = new Point(180, 135);
+
 
     @Override
     public Mat processFrame(Mat input) {
@@ -103,19 +110,29 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
          * the threshold range.
          */
 
-        Point A = new Point(140, 115);
-        Point B = new Point(180, 135);
+        Scalar COLOR = new Scalar(0, 255, 0);
 
-        Scalar BLUE = new Scalar(0, 0, 255);
-
+        int avg_redleft = (int) Core.mean(maskedInputMat.submat(new Rect(A, B))).val[1];
+/*
+        while (avg_redleft < 3) {
+            find1.x = find1.x + 1;
+            find2.x = find2.x + 1;
+            if (find2.x > 300) {
+                find1.x = 0;
+                find2.x = 1;
+                find1.y = find1.y +1;
+                find2.y = find2.y + 1;
+            }
+            avg_redleft = (int) Core.mean(maskedInputMat.submat(new Rect(find1, find2))).val[1];
+        }
+*/
         Imgproc.rectangle(
                 maskedInputMat,
                 A,
                 B,
-                BLUE,
+                COLOR,
                 (int)0.5);
 
-        int avg_redleft = (int) Core.mean(maskedInputMat.submat(new Rect(A, B))).val[1];
 
         int number;
         if (avg_redleft >= 60) {
