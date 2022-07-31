@@ -13,10 +13,10 @@ public class FieldCentricOpMode extends LinearOpMode {
         double multiplier = 1;
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("front left");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("back left");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("front right");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("back right");
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
