@@ -9,43 +9,12 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class SimpleThresholdPipeline extends OpenCvPipeline {
-
-    Telemetry telemetry;
-
-    public SimpleThresholdPipeline(Telemetry telemetry) {
-        this.telemetry = telemetry;
-    }
-
-    /*
-     * These are our variables that will be
-     * modifiable from the variable tuner.
-     *
-     * Scalars in OpenCV are generally used to
-     * represent color. So our values in the
-     * lower and upper Scalars here represent
-     * the Y, Cr and Cb values respectively.
-     *
-     * YCbCr, like most color spaces, range
-     * from 0-255, so we default to those
-     * min and max values here for now, meaning
-     * that all pixels will be shown.
-     */
+public class MainPipeline extends OpenCvPipeline {
     public Scalar lower = new Scalar(66.6, 140.3, 0);
     public Scalar upper = new Scalar(225.3, 255, 92.1);
 
     String duckpos;
 
-    /*
-     * A good practice when typing EOCV pipelines is
-     * declaring the Mats you will use here at the top
-     * of your pipeline, to reuse the same buffers every
-     * time. This removes the need to call mat.release()
-     * with every Mat you create on the processFrame method,
-     * and therefore, reducing the possibility of getting a
-     * memory leak and causing the app to crash due to an
-     * "Out of Memory" error.
-     */
     private Mat ycrcbMat       = new Mat();
     private Mat binaryMat      = new Mat();
     private Mat maskedInputMat = new Mat();
@@ -62,15 +31,6 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        /*
-         * Converts our input mat from RGB to YCrCb.
-         * EOCV ALWAYS returns RGB mats, so you'd
-         * always convert from RGB to the color
-         * space you want to use.
-         *
-         * Takes our "input" mat as an input, and outputs
-         * to a separate Mat buffer "ycrcbMat"
-         */
         Imgproc.cvtColor(input, ycrcbMat, Imgproc.COLOR_RGB2YCrCb);
 
         /*
@@ -122,9 +82,6 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
         int avg_colorLeft = (int) Core.mean(maskedInputMat.submat(new Rect(A1, B1))).val[3];
         int avg_colorMiddle = (int) Core.mean(maskedInputMat.submat(new Rect(A2, B2))).val[3];
         int avg_colorRight = (int) Core.mean(maskedInputMat.submat(new Rect(A3, B3))).val[3];
-        telemetry.addData("red: ", avg_colorLeft);
-        telemetry.addData("red: ", avg_colorMiddle);
-        telemetry.addData("red: ", avg_colorRight);
 
         Imgproc.rectangle(
                 maskedInputMat,
@@ -174,10 +131,13 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
                     GREEN,
                     (int)0.5);
         }
-        telemetry.addData("Duck position: ", duckpos);
-        telemetry.update();
 
         return maskedInputMat;
+    }
+
+    public String getDuckPosition()
+    {
+        return duckpos;
     }
 
 }

@@ -69,6 +69,7 @@ public class BetterVelocityControl extends LinearOpMode {
             if (((currentPosition-lastPosition)/timer.seconds()) < (reference - 20))//tolerance of 20
                 telemetry.addData("Desired velocity not reached", error);
         }
+        telemetry.update();
 
         motor.setPower(0);
     }
