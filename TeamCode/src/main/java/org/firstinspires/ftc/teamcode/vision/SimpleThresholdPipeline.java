@@ -31,8 +31,10 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
      * min and max values here for now, meaning
      * that all pixels will be shown.
      */
-    public Scalar lower = new Scalar(63.8, 161.5, 69.4);
-    public Scalar upper = new Scalar(204, 189.8, 99.2);
+    public Scalar lower = new Scalar(66.6, 140.3, 0);
+    public Scalar upper = new Scalar(225.3, 255, 92.1);
+
+    String duckpos;
 
     /*
      * A good practice when typing EOCV pipelines is
@@ -48,12 +50,15 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
     private Mat binaryMat      = new Mat();
     private Mat maskedInputMat = new Mat();
 
-    Point find1 = new Point(0, 0);
-    Point find2 = new Point(1, 0);
 
-    Point A = new Point(140, 115);
-    Point B = new Point(180, 135);
+    Point A1 = new Point(10, 20);
+    Point B1 = new Point(90, 70);
 
+    Point A2 = new Point(100, 20);
+    Point B2 = new Point(180, 70);
+
+    Point A3 = new Point(200, 20);
+    Point B3 = new Point(300, 70);
 
     @Override
     public Mat processFrame(Mat input) {
@@ -110,39 +115,66 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
          * the threshold range.
          */
 
-        Scalar COLOR = new Scalar(0, 255, 0);
+        Scalar GREEN = new Scalar(0, 255, 0);
+        Scalar BLUE = new Scalar(0, 0, 255);
+        Scalar RED = new Scalar(255, 0, 0);
 
-        int avg_redleft = (int) Core.mean(maskedInputMat.submat(new Rect(A, B))).val[1];
-/*
-        while (avg_redleft < 3) {
-            find1.x = find1.x + 1;
-            find2.x = find2.x + 1;
-            if (find2.x > 300) {
-                find1.x = 0;
-                find2.x = 1;
-                find1.y = find1.y +1;
-                find2.y = find2.y + 1;
-            }
-            avg_redleft = (int) Core.mean(maskedInputMat.submat(new Rect(find1, find2))).val[1];
-        }
-*/
+        int avg_colorLeft = (int) Core.mean(maskedInputMat.submat(new Rect(A1, B1))).val[3];
+        int avg_colorMiddle = (int) Core.mean(maskedInputMat.submat(new Rect(A2, B2))).val[3];
+        int avg_colorRight = (int) Core.mean(maskedInputMat.submat(new Rect(A3, B3))).val[3];
+        telemetry.addData("red: ", avg_colorLeft);
+        telemetry.addData("red: ", avg_colorMiddle);
+        telemetry.addData("red: ", avg_colorRight);
+
         Imgproc.rectangle(
                 maskedInputMat,
-                A,
-                B,
-                COLOR,
+                A1,
+                B1,
+                RED,
+                (int)0.5);
+        Imgproc.rectangle(
+                maskedInputMat,
+                A2,
+                B2,
+                RED,
+                (int)0.5);
+        Imgproc.rectangle(
+                maskedInputMat,
+                A3,
+                B3,
+                RED,
                 (int)0.5);
 
+        int maximum = Math.max(Math.max(avg_colorLeft, avg_colorMiddle), avg_colorRight);
 
-        int number;
-        if (avg_redleft >= 60) {
-            number = 4;
-        } else if (avg_redleft > 0 && avg_redleft<60) {
-            number = 1;
-        } else {
-            number = 0;
+        if (maximum == avg_colorLeft) {
+            duckpos = "left";
+            Imgproc.rectangle(
+                    maskedInputMat,
+                    A1,
+                    B1,
+                    GREEN,
+                    (int)0.5);
         }
-        telemetry.addData("number of rings: ", number);
+        if (maximum == avg_colorMiddle) {
+            duckpos = "middle";
+            Imgproc.rectangle(
+                    maskedInputMat,
+                    A2,
+                    B2,
+                    GREEN,
+                    (int)0.5);
+        }
+        if (maximum == avg_colorRight) {
+            duckpos = "right";
+            Imgproc.rectangle(
+                    maskedInputMat,
+                    A3,
+                    B3,
+                    GREEN,
+                    (int)0.5);
+        }
+        telemetry.addData("Duck position: ", duckpos);
         telemetry.update();
 
         return maskedInputMat;
