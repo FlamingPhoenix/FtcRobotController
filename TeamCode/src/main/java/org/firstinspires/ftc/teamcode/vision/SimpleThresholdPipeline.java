@@ -158,7 +158,7 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
         }
         if (maximum == avg_colorMiddle) {
             duckpos = "middle";
-            Imgproc.rectangle(
+            Imgproc.rectangle(//test
                     maskedInputMat,
                     A2,
                     B2,
