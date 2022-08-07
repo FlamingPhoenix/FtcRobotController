@@ -1,4 +1,4 @@
-##POWER PLAY
+POWER PLAY
 This code is for the 2022-2023 season.
 I hope future generations of Flaming Pheonix will learn to dream crazier stuff up.
 
