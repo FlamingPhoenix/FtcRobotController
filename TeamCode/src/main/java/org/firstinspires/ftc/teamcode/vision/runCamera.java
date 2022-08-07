@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,6 +10,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+@Autonomous(name="camera test", group="none")
 public class runCamera extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,5 +42,12 @@ public class runCamera extends LinearOpMode {
 
         telemetry.addData("Duck position: ", duckPosition);
         telemetry.update();
+
+        waitForStart();
+
+        telemetry.addData("Program finished! ", "Prompt will remain on screen for 10 seconds then program will end.");
+
+        sleep(10000);
+
     }
 }
