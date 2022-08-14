@@ -13,21 +13,21 @@ public class MainPipeline extends OpenCvPipeline {
     public Scalar lower = new Scalar(66.6, 140.3, 0);
     public Scalar upper = new Scalar(225.3, 255, 92.1);
 
-    String duckpos;
+    int duckpos = 2;//left=0; middle=1; right=2;
 
     private Mat ycrcbMat       = new Mat();
     private Mat binaryMat      = new Mat();
     private Mat maskedInputMat = new Mat();
 
 
-    Point A1 = new Point(10, 20);
-    Point B1 = new Point(90, 70);
+    Point A1 = new Point(0, 200);
+    Point B1 = new Point(181, 288);
 
-    Point A2 = new Point(100, 20);
-    Point B2 = new Point(180, 70);
+    Point A2 = new Point(181, 200);
+    Point B2 = new Point(363, 288);
 
-    Point A3 = new Point(200, 20);
-    Point B3 = new Point(300, 70);
+    Point A3 = new Point(363, 200);
+    Point B3 = new Point(544, 288);
 
     @Override
     public Mat processFrame(Mat input) {
@@ -105,7 +105,7 @@ public class MainPipeline extends OpenCvPipeline {
         int maximum = Math.max(Math.max(avg_colorLeft, avg_colorMiddle), avg_colorRight);
 
         if (maximum == avg_colorLeft) {
-            duckpos = "left";
+            duckpos = 0;
             Imgproc.rectangle(
                     maskedInputMat,
                     A1,
@@ -114,7 +114,7 @@ public class MainPipeline extends OpenCvPipeline {
                     (int)0.5);
         }
         if (maximum == avg_colorMiddle) {
-            duckpos = "middle";
+            duckpos = 1;
             Imgproc.rectangle(//test
                     maskedInputMat,
                     A2,
@@ -123,7 +123,7 @@ public class MainPipeline extends OpenCvPipeline {
                     (int)0.5);
         }
         if (maximum == avg_colorRight) {
-            duckpos = "right";
+            duckpos = 2;
             Imgproc.rectangle(
                     maskedInputMat,
                     A3,
@@ -135,7 +135,7 @@ public class MainPipeline extends OpenCvPipeline {
         return maskedInputMat;
     }
 
-    public String getDuckPosition()
+    public int getDuckPosition()
     {
         return duckpos;
     }

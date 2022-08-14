@@ -51,14 +51,14 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
     private Mat maskedInputMat = new Mat();
 
 
-    Point A1 = new Point(10, 20);
-    Point B1 = new Point(90, 70);
+    Point A1 = new Point(0, 150);
+    Point B1 = new Point(181, 288);
 
-    Point A2 = new Point(100, 20);
-    Point B2 = new Point(180, 70);
+    Point A2 = new Point(181, 150);
+    Point B2 = new Point(363, 288);
 
-    Point A3 = new Point(200, 20);
-    Point B3 = new Point(300, 70);
+    Point A3 = new Point(363, 150);
+    Point B3 = new Point(544, 288);
 
     @Override
     public Mat processFrame(Mat input) {

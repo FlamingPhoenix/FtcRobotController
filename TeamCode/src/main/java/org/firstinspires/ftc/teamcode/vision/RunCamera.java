@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -14,20 +15,21 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class RunCamera extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        OpenCvWebcam webcam;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "special camera");
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
 
         MainPipeline myPipeline = new MainPipeline();
-        camera.setPipeline(myPipeline);
+        webcam.setPipeline(myPipeline);
 
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-
+                webcam.startStreaming(544, 288, OpenCvCameraRotation.UPRIGHT);
+                FtcDashboard.getInstance().startCameraStream(webcam, 30);
             }
             @Override
             public void onError(int errorCode)
@@ -38,14 +40,33 @@ public class RunCamera extends LinearOpMode {
             }
         });
 
-        String duckPosition = myPipeline.getDuckPosition();
+        int duckPosition = myPipeline.getDuckPosition();
 
-        telemetry.addData("Duck position: ", duckPosition);
-        telemetry.update();
+        while (!isStarted() && !isStopRequested())
+        {
+            telemetry.addData("Realtime analysis ", myPipeline.getDuckPosition());
+            telemetry.update();
+            duckPosition = myPipeline.getDuckPosition();
 
-        waitForStart();
+            // Don't burn CPU cycles busy-looping in this sample
+            sleep(50);
+        }
+
+        if (duckPosition == 0) {
+            telemetry.addData("Duck position: ", "left");
+            telemetry.update();
+        } else if (duckPosition == 1) {
+            telemetry.addData("Duck position: ", "middle");
+            telemetry.update();
+        } else if (duckPosition == 2) {
+            telemetry.addData("Duck position: ", "right");
+            telemetry.update();
+        }
+
+        sleep(10000);
 
         telemetry.addData("Program finished! ", "Prompt will remain on screen for 10 seconds then program will end.");
+        telemetry.update();
 
         sleep(10000);
 
