@@ -6,6 +6,8 @@ corresponding position relative to the camera in real life.
 Thus, we can figure out the position where the block's center
 should be on the screen for the block to be right in front of the robot.
 
+It takes the size of the countour(size of the block on the screen) and stops the robot when the contour is biggest.
+
 This pipeline is not in use but most likely I will use a
 PID controller to loop the feedback from the camera to the robot speed.
  */

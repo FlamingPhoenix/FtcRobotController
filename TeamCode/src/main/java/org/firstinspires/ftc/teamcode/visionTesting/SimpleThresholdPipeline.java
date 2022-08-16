@@ -31,8 +31,8 @@ public class SimpleThresholdPipeline extends OpenCvPipeline {
      * min and max values here for now, meaning
      * that all pixels will be shown.
      */
-    public Scalar lower = new Scalar(66.6, 140.3, 0);
-    public Scalar upper = new Scalar(225.3, 255, 92.1);
+    public Scalar lower = new Scalar(82.2, 127.5, 0);
+    public Scalar upper = new Scalar(255, 255, 82.2);
 
     String duckpos;
 
